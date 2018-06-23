@@ -13,6 +13,23 @@
         h1 {
             text-align: center;
         }
+        #students {
+            width:100%;
+        }
+        #students td, #students th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        #students tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        #students th {
+            text-align: left;
+            padding-top: 12px;
+            padding-bottom: 12px;
+            background-color: #1c8e96;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -29,6 +46,7 @@
     Statement myStmt;
     ResultSet myRs = null;
     Class.forName("com.mysql.jdbc.Driver");
+    try{
     Connection myConn = DriverManager.getConnection(dbUrl,user,password);
     myStmt = myConn.createStatement();
     String insertDb = "insert into student" +
@@ -36,15 +54,35 @@
             " values ('" + nume + "', '"+ prenume +
             "',"+varsta + ",'" + materia + "')";
     System.out.println(insertDb);
-    try {
-        myStmt.executeUpdate(insertDb);
-    } catch (SQLException e) {
-        e.printStackTrace();
-    }
+    myStmt.executeUpdate(insertDb);
 
 
+    myRs = myStmt.executeQuery("select * from student");
 %>
+    <table id="students">
+        <tr>
+        <th>ID</th>
+        <th>Nume</th>
+        <th>Prenume</th>
+        <th>Varsta</th>
+        <th>Materia</th>
+    </tr>
+        <%
+            while(myRs.next()){ %>
+            <tr><td><%=myRs.getString(1)%></td>
+                <td><%=myRs.getString(2)%></td>
+                <td><%=myRs.getString(3)%></td>
+                <td><%=myRs.getString(4)%></td>
+                <td><%=myRs.getString(5)%></td>
+            </tr>
+           <%
+            }
+               } catch (SQLException e) {
+                   e.printStackTrace();
+               }
+        %>
 
+    </table>
 
 </body>
 </html>
